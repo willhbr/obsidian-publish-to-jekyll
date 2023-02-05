@@ -1,0 +1,13 @@
+{
+	"name": "obsidian-publish-to-jekyll",
+	"version": "1.0.0",
+	"description": "Publish from Obsidian to Jekyll blog",
+	"main": "main.js",
+	"keywords": [],
+	"author": "Will Richardson",
+	"license": "MIT",
+	"devDependencies": {
+		"builtin-modules": "latest",
+		"obsidian": "latest"
+	}
+}

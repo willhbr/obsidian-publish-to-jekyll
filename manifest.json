@@ -1,0 +1,10 @@
+{
+	"id": "obsidian-publish-to-jekyll",
+	"name": "Publish to Jekyll",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Publish blogs from Obsidian to Jekyll",
+	"author": "Will Richardson",
+	"authorUrl": "https://willhbr.net",
+	"isDesktopOnly": true
+}
