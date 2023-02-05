@@ -15,25 +15,53 @@ const writeToJekyll = (root, date, title, content) => {
     fs.mkdirSync(dir);
   }
 
-  fs.writeFile(fullpath, content, err => {
+  fs.writeFile(fullpath, toJekyll(title, content, date), err => {
     if (err) console.error(err);
   })
 }
 
+const handleFrontmatter = (lines, front) => {
+  let idx = 1;
+  for (; idx < lines.length; idx++) {
+    let line = lines[idx];
+    if (line == '---') break;
+    let index = line.indexOf(': ');
+    let key = line.substr(0, index);
+    let value = line.substr(index + 2);
+    front[key] = value;
+  }
+  return lines.splice(idx).join('\n');
+};
+
 const toJekyll = (title, content, date) => {
   let date_str = dateStr(date);
 
-  // TODO check content and merge frontmatter
+  let lines = content.split('\n');
+  let front = {
+    title: title,
+    date: date_str,
+    layout: 'post',
+  };
+  if (lines[0] == '---') {
+    console.log("handling frontmatter");
+    content = handleFrontmatter(lines, front);
+  }
 
-  return `
----
-title: "${title}"
-date: ${date_str}
-layout: post
----
+  let buffer = '---\n';
+  Object.keys(front).forEach(key => {
+    buffer += key + ': ';
+    let val = front[key];
+    if (val.includes(' ')) {
+      buffer += '"' + val + '"';
+    } else {
+      buffer += val;
+    }
+    buffer += '\n';
+  })
 
-${content}
-  `;
+  buffer += '---\n\n' + content.trim();
+
+  return buffer;
 }
 
 class JekyllPublisher extends obs.Plugin {
@@ -55,12 +83,11 @@ class JekyllPublisher extends obs.Plugin {
   }
 
   publish(ctx, path) {
-    let content = ctx.getViewData();
+    let content = ctx.getViewData().trim();
     let title = ctx.file.basename;
     let filename = sluggify(title);
     let date = new Date();
 
-    let jekyllContent = toJekyll(title, content, date);
     writeToJekyll(path, date, title, content)
   }
 
