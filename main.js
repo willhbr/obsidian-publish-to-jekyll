@@ -5,7 +5,8 @@ const sluggify = (input) => input.toLowerCase().replace(/[^\w]+/g, '-');
 
 console.log('loading...');
 
-const dateStr = date => date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+const pad = (num) => num < 10 ? '0' + num : num;
+const dateStr = date => date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate());
 
 const writeToJekyll = (root, date, title, content) => {
   let date_str = dateStr(date);
@@ -30,7 +31,7 @@ const handleFrontmatter = (lines, front) => {
     let value = line.substr(index + 2);
     front[key] = value;
   }
-  return lines.splice(idx).join('\n');
+  return lines.splice(idx + 1).join('\n');
 };
 
 const toJekyll = (title, content, date) => {
